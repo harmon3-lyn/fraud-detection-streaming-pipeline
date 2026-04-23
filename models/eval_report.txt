@@ -1,0 +1,42 @@
+
+------------------------------------------------------------
+EVALUATION - Test Holdout
+------------------------------------------------------------
+Threshold       : 0.8895
+ROC-AUC         : 1.0000
+PR-AUC          : 0.9958
+Precision       : 0.9827
+Recall          : 0.9781
+F1              : 0.9804
+
+Confusion Matrix:
+                Pred Legit  Pred Fraud
+Actual Legit  :    553,537          37
+Actual Fraud  :         47       2,098
+
+Fraud caught (TP)       : 2,098  / 2,145  (97.8%)
+Legit blocked (FP)      : 37  / 553,574  (0.007%)
+------------------------------------------------------------
+
+Top 20 features (gain):
+                   feature  gain_norm
+          AvgTxnAmtLast24h   0.589212
+        BotLikelihoodScore   0.185764
+                       amt   0.066434
+        SessionDurationSec   0.049479
+           CheckoutTimeSec   0.020202
+      IsNewDevice_x_IPRisk   0.011247
+      MerchantAmountZScore   0.009887
+InteractionComplexityScore   0.009566
+               PagesViewed   0.009120
+   MerchantFraudRate_Train   0.008837
+               IsNewDevice   0.007553
+           TransactionHour   0.004162
+   RiskSignalWeightedScore   0.003711
+                   log_amt   0.003251
+             TxnAmount_24h   0.002285
+        TimeOfDayDeviation   0.002192
+      AmountPercentileRank   0.001926
+               IPRiskScore   0.001705
+   SharedMerchantFraudRate   0.001390
+    CategoryDeviationScore   0.001096
