@@ -7,6 +7,7 @@ __pycache__/
 .venv/
 
 # Data
+data/
 *.csv
 
 # Model
@@ -14,3 +15,6 @@ models/
 
 # OS
 Thumbs.db
+
+# SQL
+scripts/sql/feature_engineering.sql

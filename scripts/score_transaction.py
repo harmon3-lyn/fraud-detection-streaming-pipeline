@@ -51,8 +51,9 @@ def _load_artifacts():
 
 def _get_connection():
     import pyodbc
-    from config import (SQL_DATABASE, SQL_DRIVER, SQL_PASSWORD, SQL_SERVER, SQL_USER, USE_WINDOWS_AUTH)
-    from config import SQL_TRUST_CERT
+    from config import SQL_DATABASE, SQL_DRIVER, SQL_SERVER, SQL_TRUST_CERT, USE_WINDOWS_AUTH
+    if not USE_WINDOWS_AUTH:
+        from config import SQL_USER, SQL_PASSWORD
     trust = "TrustServerCertificate=yes;" if SQL_TRUST_CERT else ""
     if USE_WINDOWS_AUTH:
         conn_str = (

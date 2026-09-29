@@ -72,6 +72,23 @@ Each transaction is scored by [scripts/score_transaction.py](scripts/score_trans
 
 ---
 
+## Feature Pipeline (SQL)
+
+Data scaffold consists of model-ready features joined from the raw transaction data and a set of internal/third-party enrichment feeds (email, phone, IP, address, identity bureau, device trust, merchant risk, account history, login behavior). It is not tracked in this repository, but the pipeline it implements is summarized here:
+
+1. **Per-customer stats** - average/std/max transaction amount and merchant/category diversity, computed from **train-period data only (pre-2020)** to avoid leakage, with a fallback to all-time stats for customers who only appear in the test period.
+2. **Sequential features** - time since last transaction, first-time-at-merchant flags, merchant visit rank, and a suspicious-geo-speed flag (large merchant location jump combined with a short time gap).
+3. **Amount percentile rank** - each transaction's amount percentile relative to that customer's history.
+4. **Velocity windows** - transaction counts and spend over trailing 1h/6h/24h/7d windows, excluding the current transaction so counts reflect prior activity only.
+5. **Login and password-change aggregates** - login failure rate/attempt counts, and days since last password change.
+6. **Per-merchant fraud rate** - computed from train-period data only, alongside an all-time merchant fraud rate for comparison.
+7. **Final assembly** - the above is joined onto identity, email, phone, IP/network, address, bureau, device/session, merchant, and account-history feeds, and ten rule-based boolean flags are derived (e.g. high velocity, VPN/Tor usage, synthetic identity) plus a composite risk signal count.
+8. **Indexes and validation** - indexes are added for downstream query performance, followed by a validation query comparing feature averages and rule fire-rates between fraud and legitimate transactions.
+
+**Feature categories:** keys, calendar, amount, velocity, sequential, account lifecycle, merchant/category diversity, identity, email intelligence, phone intelligence, IP/network intelligence, address intelligence, identity bureau, device/session, merchant risk, account history, login behavior, and rule-based flags.
+
+---
+
 ## Model Performance (Holdout)
 
 | Metric        | Value     |
@@ -88,7 +105,7 @@ Each transaction is scored by [scripts/score_transaction.py](scripts/score_trans
 
 **Top features by gain:** `AvgTxnAmtLast24h`, `BotLikelihoodScore`, `amt`, `SessionDurationSec`, `CheckoutTimeSec`
 
-**Important Note on data and performance:** The base dataset is the [Kaggle Credit Card Fraud Detection](https://www.kaggle.com/datasets/kartik2112/fraud-detection) synthetic dataset, extended here with additional synthetic behavioral and third-party signal features. Because the data is generated from known statistical distributions rather than real transaction history, the near-perfect metrics above are expected - the signal is cleaner and more consistent than anything you would encounter in production. This project is intended as an illustration of architecture and technique, not a benchmark of real-world performance.
+**Important Note on data and performance:** The base dataset is a synthetic dataset, extended here with additional behavioral and third-party signal features. Because the data is generated from known statistical distributions rather than real transaction history, the near-perfect metrics above are expected - the signal is cleaner and more consistent than anything you would encounter in production. This project is intended as an illustration of architecture and technique, not a benchmark of real-world performance.
 
 ---
 
