@@ -1,9 +1,6 @@
 """
 api/app.py - Scoring endpoint (FastAPI)
 
-Run with:
-    uvicorn api.app:app --host 0.0.0.0 --port 8000 --reload
-
 Endpoints:
     GET /health (liveness check)
     POST /score (score single transaction)
