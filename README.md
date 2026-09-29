@@ -51,7 +51,7 @@ fraud-detection-streaming-pipeline/
 
 ## Running the Pipeline
 
-Start the FastAPI scoring server (`uvicorn api.app:app --host 0.0.0.0 --port 8000`), then run the stream simulator (`python scripts/simulate_stream.py`) which replays holdout transactions against the `/score` endpoint one at a time. Each scored decision is written to SQL Server. The Streamlit dashboard (`streamlit run dashboard/streamlit_app.py`) polls the database on a configurable interval and displays live KPIs, score distribution, hourly volume, and a color-coded decisions table.
+Start the FastAPI scoring server, then run the stream simulator (`python scripts/simulate_stream.py`) which replays holdout transactions against the `/score` endpoint one at a time. Each scored decision is written to SQL Server. The Streamlit dashboard (`dashboard/streamlit_app.py`) polls the database on a configurable interval and displays live KPIs, score distribution, hourly volume, and a color-coded decisions table.
 
 ![Dashboard](dashboard/LiveFraudMonitorDashboard.png)
 
@@ -65,9 +65,9 @@ Each transaction is scored by [scripts/score_transaction.py](scripts/score_trans
 2. Encode categorical columns and build the feature vector
 3. Predict fraud probability with `model.predict_proba`
 4. Apply thresholds:
-   - `score >= threshold` → **DECLINE**
-   - `score >= 0.30` → **REVIEW**
-   - otherwise → **APPROVE**
+   - `score >= threshold`: **DECLINE**
+   - `score >= 0.30`: **REVIEW**
+   - otherwise: **APPROVE**
 5. Write result to `fraud_decisions` in SQL Server
 
 ---
